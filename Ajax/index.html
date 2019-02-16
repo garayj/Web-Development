@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax Interactions</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h1>Activity: Ajax Interactions</h1>	
+	<form method="get" accept-charset="utf-8">
+		<fieldset>
+			<legend>
+				<strong>Look up Weather by Zip or City</strong>
+			</legend>
+			<label for="city">
+				City: 
+			</label>	
+			<input type="text" id="city">
+			<label for="zip">
+				Zip Code: 
+			</label>	
+			<input type="text" id="zip">
+			<label for="country">
+				Country: 
+			</label>	
+			<select name="countryDrop" id="country">
+				<option value="us">United States</option>
+				<option value="uk">United Kingdom</option>
+				<option value="es">Spain</option>
+				<option value="br">Brazil</option>
+				<option value="jp">Japan</option>
+			</select>
+		<button id="submit" type="button">Submit</button>
+		</fieldset>				
+	</form>
+
+	<div id="weather">
+		<h2 id="weatherHead">Weather</h2>
+		<h4 id="descriptionTitle">Forecast: </h4><p id="description"></p>	
+		<br>
+		<h4 id="tempTitle">Temperature: </h4><p id="temp"></p>	
+		<br>
+		<h4 id="windTitle">Wind Speed: </h4><p id="windSpeed"></p>	
+		<br>
+		<h4 id="pressureTitle">Pressure: </h4><p id="pressure"></p>	
+	</div>
+	
+	<script src="script.js"></script>
+</body>
+</html>

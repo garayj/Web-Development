@@ -1,0 +1,10 @@
+#weather{
+	margin: 20px;
+	display: inline-block;
+}
+
+#weather h4, #weather p{
+	padding-left: 10px;
+	margin: 0 auto;
+}
+
