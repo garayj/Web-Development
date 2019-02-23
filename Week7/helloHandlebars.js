@@ -13,18 +13,31 @@ app.set('port', 3000);
 
 
 app.post('/', function(req,res){
+//Make an array for the parameters that are sent along with GET request.
   var qParams = [];
+//Push each parameter into the array as an object.
+  for (let n in req.query){
+  	qParams.push({'name':n, 'value':req.query[n]});
+  }
+//Push the values that were receieved by the request body of the POST.
   for (var p in req.body){
-    qParams.push({'name':p,'value':req.body[p]})};
-  console.log(qParams);
-  console.log(req.body);
+    qParams.push({'name':p,'value':req.body[p]})
+  };
+//Make an object and has a key dataList and pair it with parameter array.
   var context = {};
   context.dataList = qParams;
   res.render('post', context);
 });
 
 app.get('/',function(req,res){
-  res.render('get') //We can omit the .handlebars extension as we do below
+	let params = [];
+	for(let n in req.query){
+		params.push({'key':n, 'value':req.query[n]});
+	}
+	let context = {};
+	context.dataList = params;
+
+  res.render('get', context); //We can omit the .handlebars extension as we do below
 });
 
 
