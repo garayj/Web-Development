@@ -1,0 +1,48 @@
+.navbar-brand, .navbar{
+	padding-top: 0;
+	background-color: #e6001f;
+	padding-left: 0;
+}
+.carousel{
+	margin: 0 auto;
+}
+body{
+	background-color: #ca8a92;
+}
+
+footer{
+	height: 10em;
+	padding-top: 30px;
+	background-color: green;
+}
+
+.jumbotron {
+	color: white;
+	margin:0;
+	background: url("img/StoreFrontS.png");
+	background-size: cover;
+	height:100%;
+	min-height: 740px;
+}
+
+.scrollbox {
+	border: 1px solid #000000;
+	background-color: #d6d6be;
+	overflow: scroll;
+	height:25em;
+	border-radius: 50px;
+	margin-bottom: 20px;
+}
+#map {
+	background-color: grey;
+}
+
+
+
+.card:nth-child(2n) .card-header, .card:nth-child(2n) .card-body h5{
+	text-align: right;
+}
+
+* {
+	font-family: 'Montserrat', sans-serif;
+}
