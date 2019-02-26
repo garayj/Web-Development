@@ -37,12 +37,20 @@ footer{
 	background-color: grey;
 }
 
+i.fas, i.fab {
+    color: black;
+ }
+
+p footer {
+	text-align: right;
+}
 
 
-.card:nth-child(2n) .card-header, .card:nth-child(2n) .card-body h5{
+
+#workers .card:nth-child(2n) .card-header, #workers .card:nth-child(2n) .card-body h5{
 	text-align: right;
 }
 
 * {
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Press Start 2P', cursive;
 }
