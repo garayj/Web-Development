@@ -3,17 +3,20 @@
 	background-color: #e6001f;
 	padding-left: 0;
 }
+.navbar-nav .nav-link{
+	padding-left: 16px;
+}
 .carousel{
 	margin: 0 auto;
 }
 body{
-	background-color: #ca8a92;
+	background-color: #1791ff;
 }
 
 footer{
-	height: 10em;
-	padding-top: 30px;
-	background-color: green;
+/*	height: 12em;
+*/	padding-top: 30px;
+	background-color: #b45b32;
 }
 
 .jumbotron {
@@ -41,10 +44,10 @@ i.fas, i.fab {
     color: black;
  }
 
-p footer {
-	text-align: right;
-}
-
+ footer p {
+ 	text-align: right;
+ 	margin-bottom: 0;
+ }
 
 
 #workers .card:nth-child(2n) .card-header, #workers .card:nth-child(2n) .card-body h5{
