@@ -16,13 +16,15 @@ var modalImg = document.getElementById("content");
 var captionText = document.getElementById("caption");
 
 // For each element within all of the images, add an event listener that fills in the modal.
-imgs.forEach( function(element) {
-  element.addEventListener("click", function(){
-    modal.style.display = "block";
-    modalImg.src = this.src;
-    captionText.innerHTML = this.alt;
-  })
-});
+if(modal){
+  imgs.forEach( function(element) {
+    element.addEventListener("click", function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    })
+  });
+}
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close");
