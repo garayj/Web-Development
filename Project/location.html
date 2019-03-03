@@ -22,7 +22,7 @@
 
 <!-- Everything in the navbar -->
 		<nav class="navbar navbar-expand-lg navbar-light">
-		  <a class="navbar-brand" href="#"><img src="img/Sign.png" alt="Thornbreaker Apothecary Sign"></a>
+		  <a class="navbar-brand" href="home.html"><img src="img/Sign.png" alt="Thornbreaker Apothecary Sign"></a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>
 		  </button>
@@ -44,11 +44,15 @@
 		    </ul>
 		  </div>
 		</nav>
-		<div id="map" class="container py-2">
+		<div id="map" class="d-flex container py-2">
 
 			<div class="row">
+
 			<div class="d-flex align-items-center justify-content-center flex-column col-md-4">
-				<div class="scrollbox p-4 d-none d-md-block">
+				<div class="d-block" id="visit">
+					<p>Come visit us!</p>
+				</div>
+				<div class="scrollbox p-3 d-none d-lg-block">
 					<h5>Directions from the East Gate:</h5>
 					<ol>
 						<li>Pass through the East Gate and continue straight when the road comes to a crossroads.</li>
@@ -66,9 +70,9 @@
 						<li>Continuing on the path, Thornbreaker's Apothecary will be on the left. It looks like a Gnome Hat!</li>
 					</ol>
 				</div>
-					<button type="button" onclick="window.open('img/Salvisor_Map.pdf')" class="btn btn-primary my-5">Download Directions!</button>
-		</div>
-		<img class="d-flex flex-column col-md-8" src="img/Map.png">
+				<button id="download" type="button" class="btn btn-primary my-5">Download Directions!</button>
+			</div>
+			<img class="d-flex flex-column col-md-8" src="img/Map.png">
 
 		</div>
 	</div>
@@ -104,6 +108,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- Javascript not from Bootstrap -->
+    <script type="text/javascript" src="script.js"></script>
   </body>
 
 </html>
