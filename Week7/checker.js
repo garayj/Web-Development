@@ -14,15 +14,16 @@ app.set('port', process.argv[2]);
 
 app.post('/', function(req,res){
 //Make an array for the parameters that are sent along with GET request.
-  var qParams = [];
+  var qParams = req.body["name"]; 
+
 //Push each parameter into the array as an object.
-  for (let n in req.query){
-  	qParams.push({'name':n, 'value':req.query[n]});
-  }
+  // for (let n in req.query){
+  // 	qParams.push({'name':n, 'value':req.query[n]});
+  // }
 //Push the values that were receieved by the request body of the POST.
-  for (var p in req.body){
-    qParams.push({'name':p,'value':req.body[p]})
-  };
+  // for (var p in req.body){
+  //   qParams.push({'name':p,'value':req.body[p]})
+  // };
 //Make an object and has a key dataList and pair it with parameter array.
   var context = {};
   context.dataList = qParams;

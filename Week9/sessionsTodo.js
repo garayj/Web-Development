@@ -22,8 +22,8 @@ app.get('/', function(req,res,next){
     return;
   }
   context.name = req.session.name;
-  context.toDoCount = req.session.toDoCount || 0;
   context.toDo = req.session.toDo || [];
+  context.toDoCount = req.session.toDo.length || 0;
 
   res.render('addItem', context);
 });
