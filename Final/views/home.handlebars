@@ -1,0 +1,56 @@
+<h1>Good Job on Working Out!</h1>
+
+<form method="post">
+  <fieldset>
+    <legend>Add a workout to your list</legend>
+    <label for="name">Exercise Name: </label><input type="text" name="name" id="exerciseName">
+    <label for="reps">Reps:</label><input type="number" name="reps" id="exerciseReps">
+    <label for="weight">Weight: </label><input type="number" name="weight" id="exerciseWeight">
+    <label for="date">Date: </label><input type="date" name="date" id="exerciseDate">
+    <select name="unit" id="unit">
+      <option value="1">lb</option>
+      <option value="0">kg</option>
+    </select>
+    <input id="add" type="submit" name="Add Item" value="Add Item">
+  </fieldset>
+</form>
+
+{{#if results}}
+<table>
+  <thead>
+    <tr>
+      <th>Exercise Name</th>
+      <th>Weight</th>
+      <th>Reps</th>
+      <th>Date</th>
+      <th>Units</th>
+    </tr>
+  </thead>
+  <tbody>
+{{#each results}}
+    <tr>
+      <td>
+        {{this.name}}
+      </td>
+      <td>
+        {{this.weight}}
+      </td>
+      <td>
+        {{this.rep}}
+      </td>
+      <td>
+        {{this.date}}
+      </td>
+      <td>
+        {{this.lbs}}
+      </td>
+    </tr>
+    <form method="post">
+      <input type="hidden" name="id" value="{{this.id}}">
+      <input id="editBtn" type="submit" name="Edit" value="Edit">
+      <input id="rmBtn" type="submit" name="Remove" value="Remove">
+    </form>
+  </tbody>
+  {{/each}}
+</table>
+{{/if}}
