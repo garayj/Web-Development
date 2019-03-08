@@ -2,7 +2,6 @@ let add = document.getElementById("add");
 let table = document.getElementById("table");
 window.addEventListener('load', function(){
 	let req = new XMLHttpRequest();
-	console.log("hello");
 	req.open("GET","/select", true);
 	req.onreadystatechange = function(){
 		if(req.status === 200){
@@ -62,12 +61,11 @@ function makeRow(element){
 		del.type = "submit";
 		del.name = "Remove";
 		del.value = "Remove";
-		// removeListener(del);
 
 
 		nameCell.textContent = element.name;
 		weightCell.textContent = element.weight;
-		repCell.textContent = element.rep;
+		repCell.textContent = element.reps;
 		dateCell.textContent = element.date;
 		unitCell.textContent = element.lbs;
 		console.log(element.lbs);
@@ -89,32 +87,32 @@ function makeRow(element){
 		form.appendChild(edit);
 		form.appendChild(del);
 
+		removeListener(del);
 		return row;
 
 
 
 }
 
-// function removeListener(removeButton){
-// 	let context = removeButton.
-// 	removeButton.addEventListener('click',function(event){
-// 		let req = new XMLHttpRequest();
-// 		req.open("POST", '/',true);
-// 		req.setRequestHeader('Content-Type',  'application/json');
-// 		req.addEventListener('load', function(){
-// 	      if(req.status >= 200 && req.status < 400){
-// 	        let response = JSON.parse(req.responseText);
-// 	        let newRow = makeRow(response[response.length - 1]);
-// 	        tableBody.appendChild(newRow);
-// 	        let response = JSON.parse(req.responseText);
-// 		   	}
-// 		});
-// 		req.send(JSON.stringify(context));
-// 	    event.preventDefault();
-// 	    event.stopPropagation();
+function removeListener(removeButton){
+	let context = {};
+	context.id = removeButton.parentNode.children[0].value;
+	context.action = removeButton.value;
+	removeButton.addEventListener('click',function(event){
+		let req = new XMLHttpRequest();
+		req.open("POST", '/',true);
+		req.setRequestHeader('Content-Type',  'application/json');
+		req.addEventListener('load', function(){
+	      if(req.status >= 200 && req.status < 400){
+	      	removeButton.parentNode.parentNode.parentNode.remove();
+		   	}
+		});
+		req.send(JSON.stringify(context));
+	    event.preventDefault();
+	    event.stopPropagation();
 
-// 	});
-// }
+	});
+}
 
 add.addEventListener('click', function(event){
 	let req = new XMLHttpRequest();
@@ -137,9 +135,10 @@ add.addEventListener('click', function(event){
 	context.reps = exReps;
 	context.date = exDate;
 	context.unit = unit;
+	document.getElementById('addItem').reset();
 
-	if(context.name === ""){
-		alert("Enter a name");
+	if(context.name === "" || context.reps === "" || context.date === "" || context.weight === ""){
+		alert("Enter a thing son");
 		event.stopPropagation();
 		event.preventDefault();
 	}

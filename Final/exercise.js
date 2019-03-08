@@ -48,13 +48,6 @@ app.get('/', function(req,res,next){
 app.post("/edit", function(req,res){
   let context = {}
   if(req.body['Remove']){
-    mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
-      if(err){
-        next(err);
-        return;
-      }
-      res.render('home');
-    });
   }
   if(req.body['Edit']){
   }
@@ -64,6 +57,19 @@ app.post("/edit", function(req,res){
 
 app.post('/',function(req,res){
   console.log(req.body);
+  let context = {};
+  if(req.body.action){
+    mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
+      if(err){
+        next(err);
+        return;
+      }
+      context =rows;
+      res.send(context);
+      return;
+    });
+
+  }
   if(req.body['weight']){
     let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
     mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
@@ -72,7 +78,7 @@ app.post('/',function(req,res){
             return;
         }
         mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields){
-          if (error) {
+          if (err) {
               next(err);
               return;
           }
@@ -81,6 +87,18 @@ app.post('/',function(req,res){
         });
    });
   }
+});
+
+
+app.use(function(req,res){
+  res.status(404);
+  res.render('404');
+});
+
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500);
+  res.render('500');
 });
 
 
