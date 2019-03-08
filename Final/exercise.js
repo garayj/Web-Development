@@ -31,7 +31,7 @@ app.get('/reset-table',function(req,res,next){
 
 app.get('/select', function(req, res) {
     let context = {};
-    mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields) {
+    mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields) {
         if (err) {
             next(err);
             return;
@@ -45,20 +45,11 @@ app.get('/', function(req,res,next){
   res.render('home');
 });
 
-app.post("/edit", function(req,res){
-  let context = {}
-  if(req.body['Remove']){
-  }
-  if(req.body['Edit']){
-  }
-
-
-});
 
 app.post('/',function(req,res){
-  console.log(req.body);
   let context = {};
-  if(req.body.action){
+  //Remove action
+  if(req.body.action == "Remove"){
     mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
       if(err){
         next(err);
@@ -70,6 +61,17 @@ app.post('/',function(req,res){
     });
 
   }
+  if(req.body.action == "Edit"){
+    mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields){
+      if (err) {
+          next(err);
+          return;
+      }
+      let context = rows;
+      res.render('edit', context);
+    });
+  }
+  //Add Item action
   if(req.body['weight']){
     let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
     mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
@@ -77,7 +79,7 @@ app.post('/',function(req,res){
             next(err);
             return;
         }
-        mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields){
+        mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields){
           if (err) {
               next(err);
               return;
@@ -87,6 +89,14 @@ app.post('/',function(req,res){
         });
    });
   }
+
+
+
+});
+app.post('/edit', function(req,res){
+  context = {};
+  context = req.body;
+  res.render('edit', context);
 });
 
 

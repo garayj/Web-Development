@@ -1,20 +1,25 @@
 let add = document.getElementById("add");
 let table = document.getElementById("table");
 window.addEventListener('load', function(){
-	let req = new XMLHttpRequest();
-	req.open("GET","/select", true);
-	req.onreadystatechange = function(){
-		if(req.status === 200){
-			if(req.readyState === 4){
-				let response = JSON.parse(req.responseText);
-				for(let n = 0; n < response['results'].length; n++){
-					let thing = makeRow(response['results'][n]);
-					document.getElementById("tableBody").appendChild(thing);
+	if(table){
+		let req = new XMLHttpRequest();
+		req.open("GET","/select", true);
+		req.onreadystatechange = function(){
+			if(req.status === 200){
+				if(req.readyState === 4){
+					let response = JSON.parse(req.responseText);
+					for(let n = 0; n < response['results'].length; n++){
+						let thing = makeRow(response['results'][n]);
+						document.getElementById("tableBody").appendChild(thing);
+					}
 				}
 			}
 		}
+		req.send(null);
+		}
+	else{
+		alert("hello");
 	}
-	req.send(null);
 })
 
 
@@ -48,7 +53,7 @@ function makeRow(element){
 		let buttons = document.createElement("td");
 		let form = document.createElement("form");
 		form.method = "post";
-		form.action = "/edit";
+		form.action = "/";
 		let id = document.createElement("input");
 		id.type = "hidden";
 		id.name = 'id';
@@ -68,7 +73,6 @@ function makeRow(element){
 		repCell.textContent = element.reps;
 		dateCell.textContent = element.date;
 		unitCell.textContent = element.lbs;
-		console.log(element.lbs);
 		if(element.lbs){
 	    	unitCell.textContent = "lbs";
 		}
@@ -87,6 +91,8 @@ function makeRow(element){
 		form.appendChild(edit);
 		form.appendChild(del);
 
+		removeListener(edit);
+
 		removeListener(del);
 		return row;
 
@@ -104,8 +110,14 @@ function removeListener(removeButton){
 		req.setRequestHeader('Content-Type',  'application/json');
 		req.addEventListener('load', function(){
 	      if(req.status >= 200 && req.status < 400){
-	      	removeButton.parentNode.parentNode.parentNode.remove();
-		   	}
+	      	console.log(context.action);
+	      	if(context.action === "Remove"){
+		      	removeButton.parentNode.parentNode.parentNode.remove();
+	      	}
+	      	if(context.action === "Edit"){
+	      		console.log('hello');
+	      	}
+		   }
 		});
 		req.send(JSON.stringify(context));
 	    event.preventDefault();
@@ -158,26 +170,3 @@ add.addEventListener('click', function(event){
 	    event.stopPropagation();
 	}
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

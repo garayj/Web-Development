@@ -1,0 +1,16 @@
+<h1>Edit Your Workout!</h1>
+
+<form id="addItem" method="post">
+  <fieldset>
+    <legend>Make changes to your exercise</legend>
+    <label for="name">Exercise Name: </label><input type="text" name="name" id="exerciseName">
+    <label for="reps">Reps:</label><input type="number" name="reps" id="exerciseReps">
+    <label for="weight">Weight: </label><input type="number" name="weight" id="exerciseWeight">
+    <label for="date">Date: </label><input type="date" name="date" id="exerciseDate">
+    <select name="unit" id="unit">
+      <option value="1">lb</option>
+      <option value="0">kg</option>
+    </select>
+    <input id="add" type="submit" name="Add Item" value="Add Item">
+  </fieldset>
+</form>
