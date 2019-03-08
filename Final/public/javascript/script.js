@@ -1,4 +1,5 @@
 let add = document.getElementById("add");
+
 let table = document.getElementById("table");
 window.addEventListener('load', function(){
 	if(table){
@@ -17,9 +18,6 @@ window.addEventListener('load', function(){
 		}
 		req.send(null);
 		}
-	else{
-		alert("hello");
-	}
 })
 
 
@@ -59,6 +57,7 @@ function makeRow(element){
 		id.name = 'id';
 		id.value = element.id;
 		let edit = document.createElement("input");
+
 		edit.type = "submit";
 		edit.name = "Edit";
 		edit.value = "Edit";
@@ -106,23 +105,19 @@ function removeListener(removeButton){
 	context.action = removeButton.value;
 	removeButton.addEventListener('click',function(event){
 		let req = new XMLHttpRequest();
-		req.open("POST", '/',true);
-		req.setRequestHeader('Content-Type',  'application/json');
-		req.addEventListener('load', function(){
-	      if(req.status >= 200 && req.status < 400){
-	      	console.log(context.action);
-	      	if(context.action === "Remove"){
+		if(context.action === "Remove"){
+			req.open("POST", '/',true);
+			req.setRequestHeader('Content-Type',  'application/json');
+			req.addEventListener('load', function(){
+		      if(req.status >= 200 && req.status < 400){
+		        let response = JSON.parse(req.responseText);
 		      	removeButton.parentNode.parentNode.parentNode.remove();
-	      	}
-	      	if(context.action === "Edit"){
-	      		console.log('hello');
-	      	}
-		   }
-		});
-		req.send(JSON.stringify(context));
-	    event.preventDefault();
-	    event.stopPropagation();
-
+			   }
+			});
+			req.send(JSON.stringify(context));
+		    event.preventDefault();
+		    event.stopPropagation();
+		}
 	});
 }
 

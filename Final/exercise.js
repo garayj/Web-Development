@@ -45,11 +45,25 @@ app.get('/', function(req,res,next){
   res.render('home');
 });
 
+app.get('/edit', function(req,res,next){
+  context = {};
+  context.id = req.body.id;
+  context.name = req.body.name;
+  context.weight = req.body.weight;
+  context.reps = req.body.reps;
+  context.date = req.body.date;
+  context.unit = req.body.unit;
+
+  res.render('edit',context);
+});
+
 
 app.post('/',function(req,res){
   let context = {};
+  console.log(req.body);
   //Remove action
   if(req.body.action == "Remove"){
+    console.log("remove is running");
     mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
       if(err){
         next(err);
@@ -62,13 +76,14 @@ app.post('/',function(req,res){
 
   }
   if(req.body.action == "Edit"){
+    console.log("edit is running");
     mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields){
       if (err) {
           next(err);
           return;
       }
       let context = rows;
-      res.render('edit', context);
+      return res.redirect('/edit');
     });
   }
   //Add Item action
@@ -95,8 +110,14 @@ app.post('/',function(req,res){
 });
 app.post('/edit', function(req,res){
   context = {};
-  context = req.body;
-  res.render('edit', context);
+  context.id = req.body.id;
+  context.name = req.body.name;
+  context.weight = req.body.weight;
+  context.reps = req.body.reps;
+  context.date = req.body.date;
+  context.unit = req.body.unit;
+  console.log(context);
+  res.render('edit',context);
 });
 
 
