@@ -29,33 +29,57 @@ app.get('/reset-table',function(req,res,next){
   });
 });
 
-
-app.get('/', function(req,res,next){
-	let context = {};
-	mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields){
-		if(err){
-			next(err);
-			return;
-		}
-		context.results = JSON.stringify(rows);
-		res.render("home", context);
-	});
+app.get('/select', function(req, res) {
+    let context = {};
+    mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields) {
+        if (err) {
+            next(err);
+            return;
+        }
+        context.results = rows;
+        res.send(context);
+    });
 });
 
-app.post('/',function(req,res){
-  let context = {};
-  let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
-  if(req.body['Add Item']){
+app.get('/', function(req,res,next){
+  res.render('home');
+});
 
-    mysql.pool.query("INSERT INTO workouts (name, reps, weight, date, lbs) VALUES (?,?,?,?,?)", whatever,function(err,result){
+app.post("/edit", function(req,res){
+  let context = {}
+  if(req.body['Remove']){
+    mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
       if(err){
         next(err);
         return;
       }
-      console.log(result.insertId);
-      context.results = result;
-      res.render('home', context);
+      res.render('home');
     });
+  }
+  if(req.body['Edit']){
+  }
+
+
+});
+
+app.post('/',function(req,res){
+  console.log(req.body);
+  if(req.body['weight']){
+    let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
+    mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
+        if (err) {
+            next(err);
+            return;
+        }
+        mysql.pool.query('SELECT * FROM workouts', function(err,rows,fields){
+          if (error) {
+              next(err);
+              return;
+          }
+          let context = rows;
+          res.send(context);
+        });
+   });
   }
 });
 
