@@ -63,13 +63,6 @@ app.get('/edit', function(req,res,next){
 
     res.render('edit',context);
   });
-
-  // context.name = req.query.name;
-  // context.weight = req.query.weight;
-  // context.reps = req.query.reps;
-  // context.date = req.query.date;
-  // context.unit = req.query.unit;
-
 });
 
 
