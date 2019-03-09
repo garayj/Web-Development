@@ -31,7 +31,9 @@ app.get('/reset-table',function(req,res,next){
 
 app.get('/select', function(req, res) {
     let context = {};
+
     mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields) {
+
         if (err) {
             next(err);
             return;
@@ -46,13 +48,15 @@ app.get('/', function(req,res,next){
 });
 
 app.get('/edit', function(req,res,next){
+  console.log("get edit");
   context = {};
-  context.id = req.body.id;
-  context.name = req.body.name;
-  context.weight = req.body.weight;
-  context.reps = req.body.reps;
-  context.date = req.body.date;
-  context.unit = req.body.unit;
+  context.id = req.query.id;
+  context.name = req.query.name;
+  context.weight = req.query.weight;
+  context.reps = req.query.reps;
+  context.date = req.query.date;
+  context.unit = req.query.unit;
+  console.log(context);
 
   res.render('edit',context);
 });
@@ -88,6 +92,7 @@ app.post('/',function(req,res){
   }
   //Add Item action
   if(req.body['weight']){
+    console.log('herehere');
     let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
     mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
         if (err) {
@@ -116,7 +121,6 @@ app.post('/edit', function(req,res){
   context.reps = req.body.reps;
   context.date = req.body.date;
   context.unit = req.body.unit;
-  console.log(context);
   res.render('edit',context);
 });
 

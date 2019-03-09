@@ -1,7 +1,10 @@
 let add = document.getElementById("add");
 
 let table = document.getElementById("table");
+
+
 window.addEventListener('load', function(){
+	console.log("this is running");
 	if(table){
 		let req = new XMLHttpRequest();
 		req.open("GET","/select", true);
@@ -49,20 +52,19 @@ function makeRow(element){
 		let dateCell = document.createElement("td");
 		let unitCell = document.createElement("td");
 		let buttons = document.createElement("td");
-		let form = document.createElement("form");
-		form.method = "post";
-		form.action = "/";
 		let id = document.createElement("input");
+
 		id.type = "hidden";
 		id.name = 'id';
 		id.value = element.id;
-		let edit = document.createElement("input");
-
-		edit.type = "submit";
+		let anchor = document.createElement('a');
+		let url = 'edit&id=' + element.id + '&name=' + element.name + '&weight=' + element.weight + "&reps=" + element.reps + '&date=' + element.date + '&unit=' + element.lbs;
+		anchor.setAttribute('href', url);
+		let edit = document.createElement("button");
+		edit.textContent = "Edit"
 		edit.name = "Edit";
 		edit.value = "Edit";
 		let del = document.createElement("input");
-		del.type = "submit";
 		del.name = "Remove";
 		del.value = "Remove";
 
@@ -86,17 +88,13 @@ function makeRow(element){
 		row.appendChild(unitCell);
 		row.appendChild(buttons);
 		buttons.appendChild(form);
-		form.appendChild(id);
-		form.appendChild(edit);
+		buttons.appendChild(id);
+		buttons.appendChild(anchor);
+		anchor.appendChild(edit);
 		form.appendChild(del);
-
-		removeListener(edit);
 
 		removeListener(del);
 		return row;
-
-
-
 }
 
 function removeListener(removeButton){
@@ -118,6 +116,19 @@ function removeListener(removeButton){
 		    event.preventDefault();
 		    event.stopPropagation();
 		}
+		// else if(context.action === "Edit"){
+
+		// 	context.name = removeButton.parentNode.parentNode.parentNode.children[0].textContent;
+		// 	context.weight= removeButton.parentNode.parentNode.parentNode.children[1].textContent;
+		// 	context.reps = removeButton.parentNode.parentNode.parentNode.children[2].textContent;
+		// 	context.date = removeButton.parentNode.parentNode.parentNode.children[3].textContent;
+		// 	context.unit = removeButton.parentNode.parentNode.parentNode.children[4].textContent;
+
+		// 	let url = "http://localhost:3000/edit?id=" + context.id + "&name=" + context.name + "&weight=" + context.weight + "&reps=" + context.reps + "&date" + context.weight + "&unit=" + context.unit;
+		// 	req.open("GET", url, true);
+		// 	req
+		// }
+
 	});
 }
 
@@ -152,14 +163,13 @@ add.addEventListener('click', function(event){
 	else{
 		req.open("POST","/", true);
 		req.setRequestHeader("Content-Type", "application/json");
-	    req.addEventListener('load',function(){
-	      if(req.status >= 200 && req.status < 400){
-	        let response = JSON.parse(req.responseText);
-	        let newRow = makeRow(response[response.length - 1]);
-	        tableBody.appendChild(newRow);
-	      } else {
-	        console.log("Error in network request: " + req.statusText);
-	      }});
+		req.onreadystatechange = function(){
+			if(req.status === 200){
+				if(req.readyState === 4){
+					let response = JSON.parse(req.responseText);
+				}
+			}
+		}
 	    req.send(JSON.stringify(context));
 	    event.preventDefault();
 	    event.stopPropagation();
