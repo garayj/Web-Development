@@ -47,20 +47,34 @@ app.get('/', function(req,res,next){
 
 app.get('/edit', function(req,res,next){
   context = {};
-  context.id = req.body.id;
-  context.name = req.body.name;
-  context.weight = req.body.weight;
-  context.reps = req.body.reps;
-  context.date = req.body.date;
-  context.unit = req.body.unit;
+  mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%Y-%m-%d") as date, lbs FROM workouts WHERE id=?' , [req.query.id],function(err,rows,fields){
+    if(err){
+      next(err);
+      return;
+    }
+    let container = rows[0];
 
-  res.render('edit',context);
+    context.name = container.name;
+    context.weight = container.weight;
+    context.reps = container.reps;
+    context.date = container.date;
+    context.lbs = container.lbs;
+    context.id = container.id;
+
+    res.render('edit',context);
+  });
+
+  // context.name = req.query.name;
+  // context.weight = req.query.weight;
+  // context.reps = req.query.reps;
+  // context.date = req.query.date;
+  // context.unit = req.query.unit;
+
 });
 
 
 app.post('/',function(req,res){
   let context = {};
-  console.log(req.body);
   //Remove action
   if(req.body.action == "Remove"){
     console.log("remove is running");
@@ -75,19 +89,20 @@ app.post('/',function(req,res){
     });
 
   }
-  if(req.body.action == "Edit"){
-    console.log("edit is running");
-    mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields){
+  else if(req.body.update){
+    console.log(req.body);
+    console.log("update is running");
+    let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit, req.body.id];
+    mysql.pool.query('UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=?', whatever,function(err,rows,fields){
       if (err) {
           next(err);
           return;
       }
-      let context = rows;
-      return res.redirect('/edit');
+      return;
     });
   }
   //Add Item action
-  if(req.body['weight']){
+  else if(req.body['weight']){
     let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
     mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
         if (err) {

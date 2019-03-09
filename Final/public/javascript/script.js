@@ -1,6 +1,13 @@
 let add = document.getElementById("add");
+if(add){
+	addListener(add);
+}
 
 let table = document.getElementById("table");
+let change = document.getElementById('changeMe');
+if(change){
+	changeListener(change);
+}
 window.addEventListener('load', function(){
 	if(table){
 		let req = new XMLHttpRequest();
@@ -20,23 +27,53 @@ window.addEventListener('load', function(){
 		}
 })
 
+function changeListener(btn){
+	btn.addEventListener('click', function(event){
+		console.log("change was pressed");
+		let req = new XMLHttpRequest();
+		let exName = document.getElementById("changeName").value;
+		let exWeight = document.getElementById("changeWeight").value;
+		let exReps = document.getElementById("changeReps").value;
+		let exDate = document.getElementById("changeDate").value;
+		let unit = document.getElementById("lbs").value;
+		let id = document.getElementById("id").value;
 
-//Make the table the first time.
 
-// add.addEventListener("click", function(event){
-// 	req.open("POST", "/", true);
-// 	req.setRequestHeader("Content-Type", "application/json");
-//     req.addEventListener('load',function(){
-//       alert('gogo');
-//       if(req.status >= 200 && req.status < 400){
-//         var response = JSON.parse(req.responseText);
-//         console.log(response);
-//       } else {
-//         console.log("Error in network request: " + req.statusText);
-//       }});
-//     req.send(JSON.stringify(data));
-//     event.preventDefault();
-// });
+		let context = {name:null,
+						weight:null,
+						reps:null,
+						date:null,
+						unit:null,
+						id: null};
+
+		context.name = exName;
+		context.weight = exWeight;
+		context.reps = exReps;
+		context.date = exDate;
+		context.unit = unit;
+		context.id = id;
+		context.update = "Update";
+
+
+		if(context.name === "" || context.reps === "" || context.date === "" || context.weight === ""){
+			alert("You made a mistake!");
+			document.getElementById('changeItem').reset();
+		}
+		else{
+			req.open("POST","/", true);
+			req.setRequestHeader("Content-Type", "application/json");
+		    req.addEventListener('load',function(){
+		      if(req.status >= 200 && req.status < 400){
+		      	console.log("hello!");
+		        let response = JSON.parse(req.responseText);
+		      } else {
+		        console.log("Error in network request: " + req.statusText);
+		      }});
+		    req.send(JSON.stringify(context));
+		    event.stopPropagation();
+		}
+	})
+}
 
 
 
@@ -50,9 +87,14 @@ function makeRow(element){
 		let unitCell = document.createElement("td");
 		let buttons = document.createElement("td");
 		let form = document.createElement("form");
-		form.method = "post";
-		form.action = "/";
 		let id = document.createElement("input");
+		let anchor = document.createElement('a');
+		anchor.setAttribute('href', 'edit?id=' + element.id +
+									'&name=' + element.name + 
+									'&weight=' + element.weight + 
+									'&reps=' + element.reps + 
+									'&date=' + element.date + 
+									'&unit=' + element.lbs);
 		id.type = "hidden";
 		id.name = 'id';
 		id.value = element.id;
@@ -85,12 +127,11 @@ function makeRow(element){
 		row.appendChild(dateCell);
 		row.appendChild(unitCell);
 		row.appendChild(buttons);
-		buttons.appendChild(form);
-		form.appendChild(id);
-		form.appendChild(edit);
-		form.appendChild(del);
+		anchor.appendChild(edit);
+		buttons.appendChild(id);
+		buttons.appendChild(anchor);
+		buttons.appendChild(del);
 
-		removeListener(edit);
 
 		removeListener(del);
 		return row;
@@ -111,7 +152,7 @@ function removeListener(removeButton){
 			req.addEventListener('load', function(){
 		      if(req.status >= 200 && req.status < 400){
 		        let response = JSON.parse(req.responseText);
-		      	removeButton.parentNode.parentNode.parentNode.remove();
+		      	removeButton.parentNode.parentNode.remove();
 			   }
 			});
 			req.send(JSON.stringify(context));
@@ -121,47 +162,50 @@ function removeListener(removeButton){
 	});
 }
 
-add.addEventListener('click', function(event){
-	let req = new XMLHttpRequest();
-	let exName = document.getElementById("exerciseName").value;
-	let exWeight = document.getElementById("exerciseWeight").value;
-	let exReps = document.getElementById("exerciseReps").value;
-	let exDate = document.getElementById("exerciseDate").value;
-	let unit = document.getElementById("unit").value;
+
+function addListener(btn){
+	btn.addEventListener('click', function(event){
+		let req = new XMLHttpRequest();
+		let exName = document.getElementById("exerciseName").value;
+		let exWeight = document.getElementById("exerciseWeight").value;
+		let exReps = document.getElementById("exerciseReps").value;
+		let exDate = document.getElementById("exerciseDate").value;
+		let unit = document.getElementById("unit").value;
 
 
 
-	let context = {name:null,
-					weight:null,
-					reps:null,
-					date:null,
-					unit:null};
+		let context = {name:null,
+						weight:null,
+						reps:null,
+						date:null,
+						unit:null};
 
-	context.name = exName;
-	context.weight = exWeight;
-	context.reps = exReps;
-	context.date = exDate;
-	context.unit = unit;
-	document.getElementById('addItem').reset();
+		context.name = exName;
+		context.weight = exWeight;
+		context.reps = exReps;
+		context.date = exDate;
+		context.unit = unit;
+		document.getElementById('addItem').reset();
 
-	if(context.name === "" || context.reps === "" || context.date === "" || context.weight === ""){
-		alert("Enter a thing son");
-		event.stopPropagation();
-		event.preventDefault();
-	}
-	else{
-		req.open("POST","/", true);
-		req.setRequestHeader("Content-Type", "application/json");
-	    req.addEventListener('load',function(){
-	      if(req.status >= 200 && req.status < 400){
-	        let response = JSON.parse(req.responseText);
-	        let newRow = makeRow(response[response.length - 1]);
-	        tableBody.appendChild(newRow);
-	      } else {
-	        console.log("Error in network request: " + req.statusText);
-	      }});
-	    req.send(JSON.stringify(context));
-	    event.preventDefault();
-	    event.stopPropagation();
-	}
-})
+		if(context.name === "" || context.reps === "" || context.date === "" || context.weight === ""){
+			alert("Enter a thing son");
+			event.stopPropagation();
+			event.preventDefault();
+		}
+		else{
+			req.open("POST","/", true);
+			req.setRequestHeader("Content-Type", "application/json");
+		    req.addEventListener('load',function(){
+		      if(req.status >= 200 && req.status < 400){
+		        let response = JSON.parse(req.responseText);
+		        let newRow = makeRow(response[response.length - 1]);
+		        tableBody.appendChild(newRow);
+		      } else {
+		        console.log("Error in network request: " + req.statusText);
+		      }});
+		    req.send(JSON.stringify(context));
+		    event.preventDefault();
+		    event.stopPropagation();
+		}
+	})
+}
