@@ -57,7 +57,9 @@ app.get('/edit', function(req,res,next){
     context.name = container.name;
     context.weight = container.weight;
     context.reps = container.reps;
-    context.date = container.date;
+    let date = container.date.split('-');
+
+    context.date = date[2] +'-' + date[0] + '-' + date[1];
     context.lbs = container.lbs;
     context.id = container.id;
 
@@ -87,7 +89,7 @@ app.post('/',function(req,res){
     let newDate = req.body.date.split("-");
     newDate = newDate[1] + "-" + newDate[2] + "-" + newDate[0];
 
-    let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit, req.body.id];
+    let whatever = [req.body.name, req.body.reps, req.body.weight, newDate, req.body.unit, req.body.id];
     mysql.pool.query('UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=?', whatever,function(err,rows,fields){
       if (err) {
           next(err);
