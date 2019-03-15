@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 3001);
+app.set('port', 9384);
 app.use(express.static('public'));
 
 app.get('/reset-table',function(req,res,next){
