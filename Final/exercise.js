@@ -1,9 +1,9 @@
 let express = require('express');
+let app = express();
 let mysql = require('./dbcon.js')
 
-var app = express();
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
-var bodyParser = require('body-parser');
+let handlebars = require('express-handlebars').create({defaultLayout:'main'});
+let bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 9384);
+app.set('port', 3001);
 app.use(express.static('public'));
 
 app.get('/reset-table',function(req,res,next){
@@ -21,7 +22,7 @@ app.get('/reset-table',function(req,res,next){
     "name VARCHAR(255) NOT NULL,"+
     "reps INT,"+
     "weight INT,"+
-    "date DATE,"+
+    "date VARCHAR(255) NOT NULL,"+
     "lbs BOOLEAN)";
     mysql.pool.query(createString, function(err){
       res.render('home',context);
@@ -31,7 +32,7 @@ app.get('/reset-table',function(req,res,next){
 
 app.get('/select', function(req, res) {
     let context = {};
-    mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields) {
+    mysql.pool.query('SELECT id, name, reps, weight, date, lbs FROM workouts', function(err,rows,fields) {
         if (err) {
             next(err);
             return;
@@ -47,7 +48,7 @@ app.get('/', function(req,res,next){
 
 app.get('/edit', function(req,res,next){
   context = {};
-  mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%Y-%m-%d") as date, lbs FROM workouts WHERE id=?' , [req.query.id],function(err,rows,fields){
+  mysql.pool.query('SELECT id, name, reps, weight, date, lbs FROM workouts WHERE id=?' , [req.query.id],function(err,rows,fields){
     if(err){
       next(err);
       return;
@@ -57,7 +58,9 @@ app.get('/edit', function(req,res,next){
     context.name = container.name;
     context.weight = container.weight;
     context.reps = container.reps;
-    context.date = container.date;
+    let date = container.date.split('-');
+
+    context.date = date[2] +'-' + date[0] + '-' + date[1];
     context.lbs = container.lbs;
     context.id = container.id;
 
@@ -70,7 +73,7 @@ app.post('/',function(req,res){
   let context = {};
   //Remove action
   if(req.body.action == "Remove"){
-    console.log("remove is running");
+    console.log("Remove is running");
     mysql.pool.query('DELETE FROM workouts WHERE id=?',[req.body.id], function(err,rows,fields){
       if(err){
         next(err);
@@ -83,9 +86,11 @@ app.post('/',function(req,res){
 
   }
   else if(req.body.update){
-    console.log(req.body);
-    console.log("update is running");
-    let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit, req.body.id];
+    console.log("Update is running");
+    let newDate = req.body.date.split("-");
+    newDate = newDate[1] + "-" + newDate[2] + "-" + newDate[0];
+
+    let whatever = [req.body.name, req.body.reps, req.body.weight, newDate, req.body.unit, req.body.id];
     mysql.pool.query('UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=?', whatever,function(err,rows,fields){
       if (err) {
           next(err);
@@ -96,13 +101,18 @@ app.post('/',function(req,res){
   }
   //Add Item action
   else if(req.body['weight']){
-    let whatever = [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.unit];
+    console.log('Adding Item');
+    console.log(req.body);
+    let date = req.body.date.split("-");
+    date = date[1] + "-" + date[2] + "-" + date[0];
+
+    let whatever = [req.body.name, req.body.reps, req.body.weight, date, req.body.unit];
     mysql.pool.query('INSERT INTO workouts(name, reps, weight, date, lbs) VALUES (?,?,?,?,?);', whatever,function(err, rows) {
         if (err) {
             next(err);
             return;
         }
-        mysql.pool.query('SELECT id, name, reps, weight, DATE_FORMAT(date, "%m-%d-%Y") as date, lbs FROM workouts', function(err,rows,fields){
+        mysql.pool.query('SELECT id, name, reps, weight, date, lbs FROM workouts', function(err,rows,fields){
           if (err) {
               next(err);
               return;
